@@ -9,16 +9,24 @@ export const CoinGridStyled = styled.div`
   margin-top: 30px;
 `;
 
-const getCoinsToDisplay = (coinList, topSection, favorites) => {
-  return topSection ? favorites : Object.keys(coinList).slice(0, 100);
+const getLowerSectionCoins = (filteredCoins) => {
+  return filteredCoins && Object.keys(filteredCoins)
+}
+
+
+const getCoinsToDisplay = (coinList, topSection, favorites, filterCoins) => {
+  return topSection ? favorites : getLowerSectionCoins(filterCoins);
 };
+// we can check to make sure that we actually have filtered coins and if we do have filtered
+// coins and others the user has set filtered coins we want
+
 
 export default function({topSection}) {
   return (
     <AppContext.Consumer>
-      {({coinList, favorites}) => (
+      {({coinList, favorites, filteredCoins}) => (
         <CoinGridStyled>
-          {getCoinsToDisplay(coinList, topSection, favorites).map(coinKey => {
+          {getCoinsToDisplay(coinList, topSection, favorites, filteredCoins).map(coinKey => {
              return (
               <CoinTile
                 topSection={topSection}
