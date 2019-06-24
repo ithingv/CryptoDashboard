@@ -33,6 +33,28 @@ export class AppProvider extends React.Component{
 
     componentDidMount = () =>{
         this.fetchCoins();
+        this.fetchPrices();
+    }
+
+
+    fetchPrices = async() => {
+        if(this.state.firstVisit) return;
+        let prices = await this.prices();
+        console.log(prices);
+        this.setState({prices});
+
+    }
+    prices = async() => {
+        let returnData = [];
+        for( let i =0; i< this.state.favorites.length; i++){
+            try{
+                let priceData = await cc.priceFull(this.state.favorites[i], 'USD');
+                returnData.push(priceData);
+            } catch(e){
+                console.warn('Fetch price error: ', e);
+            }
+        }
+        return returnData;
     }
     fetchCoins = async() => {
         let coinList = (await cc.coinList()).Data;
@@ -56,10 +78,13 @@ export class AppProvider extends React.Component{
       isInFavorites = key => ~this.state.favorites.indexOf(key);
     
       isFavoriteListMaxed = () => this.state.favorites.length >= MAX_FAVORITES;
-    confirmFavorites = () => {
+
+      confirmFavorites = () => {
         this.setState({
             firstVisit: false,
             page: 'dashboard'
+        }, () =>{
+            this.fetchPrices()
         });
         localStorage.setItem('cryptoDash', JSON.stringify({
             
@@ -90,7 +115,7 @@ export class AppProvider extends React.Component{
         return {};
     }
     setPage = page => this.setState({page})
-    
+
     setFilteredCoins = (filteredCoins) => this.setState({filteredCoins});
 
     render(){
