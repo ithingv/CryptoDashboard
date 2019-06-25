@@ -17,7 +17,8 @@ export class AppProvider extends React.Component{
                 isInFavorites: this.isInFavorites,
                 isFavoriteListMaxed: this.isFavoriteListMaxed,
                 confirmFavorites : this.confirmFavorites,
-                setFilteredCoins: this.setFilteredCoins
+                setFilteredCoins: this.setFilteredCoins,
+                setCurrentFavorite: this.setCurrentFavorite
             }
     } 
 
@@ -80,16 +81,33 @@ export class AppProvider extends React.Component{
       isFavoriteListMaxed = () => this.state.favorites.length >= MAX_FAVORITES;
 
       confirmFavorites = () => {
+        let currentFavorite = this.state.favorites[0];
         this.setState({
             firstVisit: false,
-            page: 'dashboard'
+            page: 'dashboard',
+            currentFavorite,
         }, () =>{
             this.fetchPrices()
         });
         localStorage.setItem('cryptoDash', JSON.stringify({
             
           favorites: this.state.favorites,
+          currentFavorite
         }));
+    }
+
+    // we are going into our local storage and resetting the local
+    // storage to be a stringify version of this object and 
+    // this object is simply the current value of our local storage
+    // merged with the current favorite that we just added
+    setCurrentFavorite = (sym) => {
+        this.setState({
+            currentFavorite: sym
+        });
+        localStorage.setItem('cryptoDash', JSON.stringify({
+            ...JSON.parse(localStorage.getItem('cryptoDash')),
+            currentFavorite: sym
+        }))
     }
 
 
@@ -112,7 +130,8 @@ export class AppProvider extends React.Component{
             return { page : 'settings', firstVisit: true}
         // first visit varibale, setting page is being set as default 
         }
-        return {};
+        let {favorites, currentFavorite} = cryptoDashData;
+        return {favorites, currentFavorite};
     }
     setPage = page => this.setState({page})
 
