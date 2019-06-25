@@ -2,12 +2,16 @@ import React from 'react';
 
 const cc = require('cryptocompare');
 export const AppContext = React.createContext();
+<<<<<<< HEAD
 const MAX_FAVORITES = 10;
+=======
+>>>>>>> 96071395de2d6f3fa574a63af516cf2d40b385df
 
 export class AppProvider extends React.Component{
     constructor(props){
         super(props);
             this.state = {
+<<<<<<< HEAD
                 page: 'dashboard',      
                 favorites: ['BTC', 'LTC', 'DOGE', 'ETH'],
                 ...this.saveSettings(),
@@ -110,6 +114,31 @@ export class AppProvider extends React.Component{
         }))
     }
 
+=======
+                page: 'dashboard',
+                ...this.saveSettings(),
+                setPage: this.setPage,
+                confirmFavorites : this.confirmFavorites
+            }
+    } 
+    componentDidMount = () =>{
+        this.fetchCoins();
+    }
+    fetchCoins = async() => {
+        let coinList = (await cc.coinList()).Data;
+        this.setState({coinList});
+    }
+    confirmFavorites = () => {
+        this.setState({
+            firstVisit: false,
+            page: 'dashboard'
+        });
+        localStorage.setItem('cryptoDash', JSON.stringify({
+            test: 'hello'
+        }));
+    }
+
+>>>>>>> 96071395de2d6f3fa574a63af516cf2d40b385df
 
     // Set up this app provider to default to the dashboard page unless they have no
     // local storage data which means they've never been here before
@@ -130,6 +159,7 @@ export class AppProvider extends React.Component{
             return { page : 'settings', firstVisit: true}
         // first visit varibale, setting page is being set as default 
         }
+<<<<<<< HEAD
         let {favorites, currentFavorite} = cryptoDashData;
         return {favorites, currentFavorite};
     }
@@ -137,6 +167,12 @@ export class AppProvider extends React.Component{
 
     setFilteredCoins = (filteredCoins) => this.setState({filteredCoins});
 
+=======
+        return {};
+    }
+    setPage = page => this.setState({page})
+
+>>>>>>> 96071395de2d6f3fa574a63af516cf2d40b385df
     render(){
         return <AppContext.Provider value ={this.state}>
             {this.props.children}

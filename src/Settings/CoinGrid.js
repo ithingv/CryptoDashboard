@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import styled from 'styled-components';
 import { AppContext } from '../App/AppProvider';
 import CoinTile from './CoinTile';
@@ -39,3 +40,20 @@ export default function({topSection}) {
     </AppContext.Consumer>
   );
 }
+=======
+import styled, {css} from 'styled-components';
+import {AppContext} from "../App/AppProvider"
+
+export const CoinGridStyled = styled.div`
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+`
+
+export default function(){
+    return <AppContext.Consumer>
+        {({coinList}) => <CoinGridStyled>
+            {Object.keys(coinList).map(coinKey =><div>{coinKey} </div>)}
+            </CoinGridStyled>}
+        </AppContext.Consumer>    
+}
+>>>>>>> 96071395de2d6f3fa574a63af516cf2d40b385df
